@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+
+
+
+
+
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+       default-lazy-init="true">
+
+    <!-- 加载配置参数 -->
+    <!--<util:properties id="dataSourceProps"-->
+                     <!--location="classpath:/resources.properties"></util:properties>-->
+
+    <!-- 第二种方式是使用注解的方式注入，主要用在java代码中使用注解注入properties文件中相应的value值 -->
+    <!-- 这里是PropertiesFactoryBean类，它也有个locations属性，也是接收一个数组，跟上面一样 -->
+
+    <!--<bean id="prop" class="org.springframework.beans.factory.config.PropertiesFactoryBean">-->
+        <!--<property name="locations">-->
+            <!--<array>-->
+                <!--<value>classpath:resources.properties</value>-->
+            <!--</array>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!-- 与上面的配置等价，下面的更容易理解 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations"> <!-- PropertyPlaceholderConfigurer类中有个locations属性，接收的是一个数组，即我们可以在下面配好多个properties文件 -->
+            <array>
+                <value>classpath:resources.properties</value>
+            </array>
+        </property>
+    </bean>
+
+    <!-- 数据源配置,使用druid数据库连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverclassname}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxActive" value="${maxActive}"/>
+        <property name="initialSize" value="${initialSize}"/>
+        <property name="maxWait" value="${maxWait}"/>
+        <property name="minIdle" value="${minIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}"/>
+        <property name="poolPreparedStatements" value="${poolPreparedStatements}"/>
+        <!--<property name="maxPoolPreparedStatementPerConnectionSize"-->
+                  <!--value="${maxPoolPreparedStatementPerConnectionSize}"/>-->
+    </bean>
+
+    <!-- 监控包装数据源 -->
+    <!--<bean id="wrappedDataSource" class="net.bull.javamelody.SpringDataSourceFactoryBean">-->
+    <!--<property name="targetName" value="dataSource" />-->
+    <!--</bean>-->
+
+    <!-- Hibernate配置  -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="com"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <prop key="hibernate.query.substitutions">${hibernate.query.substitutions}</prop>
+                <prop key="hibernate.default_batch_fetch_size">${hibernate.default_batch_fetch_size}</prop>
+                <prop key="hibernate.max_fetch_depth">${hibernate.max_fetch_depth}</prop>
+                <prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
+                <prop key="hibernate.bytecode.use_reflection_optimizer">${hibernate.bytecode.use_reflection_optimizer}
+                </prop>
+                <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
+                <prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
+                <prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>
+                <prop key="hibernate.cache.region.factory_class">${hibernate.cache.region.factory_class}</prop>
+                <prop key="net.sf.ehcache.configurationResourceName">${net.sf.ehcache.configurationResourceName}</prop>
+                <prop key="hibernate.cache.use_structured_entries">${hibernate.cache.use_structured_entries}</prop>
+                <prop key="current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+    <!-- 使用springJDBC (执行原生sql比hibernate方便) -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+</beans>

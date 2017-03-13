@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:noNamespaceSchemaLocation="ehcache.xsd" 
+ updateCheck="true" monitoring="autodetect" dynamicConfig="true" name="javass"> 
+
+   <defaultCache maxElementsInMemory="1000" eternal="false" timeToIdleSeconds="3600" timeToLiveSeconds="3600" overflowToDisk="false" />
+   <cache name="authorizationCache" maxElementsInMemory="100" timeToLiveSeconds="3600" eternal="false" overflowToDisk="false" />
+   <cache name="StandardQueryCache" maxElementsInMemory="5000" eternal="false" timeToLiveSeconds="3600" overflowToDisk="false"/>
+   <cache name="UpdateTimestampsCache" maxElementsInMemory="5000" eternal="true" overflowToDisk="true"/>
+    
+        
+    
+</ehcache>

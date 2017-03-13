@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <base>
+    <!--<link rel="stylesheet" type="text/css" href="css/style-index.css"/>-->
+    <script type="text/javascript" src="../static/js/base/jquery-1.11.1.min.js"></script>
+    <!--<script type="text/javascript" src="../static/js/base/jquery-3.1.1.min.js"></script>-->
+    <script type="text/javascript" src="../static/js/base/angular.min.js"></script>
+    <script type="text/javascript" src="../static/js/base/go-debug.js"></script>
+
+    <script type="text/javascript" src="../static/js/goDemo/demo.js"></script>
+
+
+
+</head>
+<body ng-app="gojsApp">
+<div ng-controller="gojsCtrl"  ng-cloak>
+
+    <div style="margin: 2px;">
+        <button type="button" class="btn btn-primary" ng-click="init()">初始化</button>
+        <button type="button" class="btn btn-primary" ng-disabled="true">布局改变</button>
+        <select ng-model="layout" ng-change="changeLayout()">
+            <option value="ForceDirectedLayout" selected >ForceDirectedLayout</option>
+            <option value="LayeredDigraphLayout">LayeredDigraphLayout</option>
+            <option value="TreeLayout" >TreeLayout</option>
+            <option value="CircularLayout">CircularLayout</option>
+            <option value="GridLayout">GridLayout</option>
+        </select>
+    </div>
+
+
+
+    <div id="sample">
+        <div id="myDiagramDiv" style="background-color: whitesmoke; border: solid 1px black; width: 100%; height: 700px"></div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"
+	   default-lazy-init="true">
+
+    <!-- freemarker配置 -->
+	<bean id="freeMarkerConfiguration"
+		class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+		<property name="templateLoaderPath" value="/archive/freemarker/" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">1</prop><!-- seconds to update template -->
+				<prop key="default_encoding">UTF-8</prop>
+				<prop key="locale">zh_CN</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 生成文档 -->
+	<!--<bean id="documentService" class="com.trs.base.service.impl.DocumentServiceImpl">-->
+		<!--<property name="documentConfiguration" ref="freeMarkerConfiguration" />-->
+	<!--</bean>-->
+
+
+</beans>

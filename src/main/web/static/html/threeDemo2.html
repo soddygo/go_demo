@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+
+    <script src="https://cdn.bootcss.com/three.js/r83/three.js"></script>
+    <!--<script src="https://cdn.bootcss.com/three.js/r83/three.module.js"></script>-->
+
+    <!--<script src="../static/js/three/three.js"></script>-->
+
+    <script src="../static/js/three/controls/TrackballControls.js"></script>
+
+    <!--<script src="../static/js/three/loaders/VTKLoader.js"></script>-->
+    <script src="../static/js/three/loaders/ColladaLoader.js"></script>
+    <script src="../static/js/three/VTKLoader.js"></script>
+
+    <script src="../static/js/three/Detector.js"></script>
+    <script src="../static/js/three/Stats.js"></script>
+
+
+    <style>
+        body {
+            font-family: Monospace;
+            background-color: #000;
+            color: #fff;
+            margin: 0px;
+            overflow: hidden;
+        }
+
+        #info {
+            color: #fff;
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+            display: block;
+        }
+
+        #info a, .button {
+            color: #f00;
+            font-weight: bold;
+            text-decoration: underline;
+            cursor: pointer
+        }
+    </style>
+
+</head>
+
+<body onload="startGame();">
+
+<div id="info">
+</div>
+<script>
+    var scene, camera,renderer, rouletteScene,stats,container;
+
+    container = document.createElement('div');
+
+
+    function startGame(){
+        console.log('Game started...');
+        scene = new THREE.Scene();
+        aspect = window.innerWidth/window.innerHeight;
+        D = 2;
+//        camera = new THREE.OrthographicCamera(-D*aspect, D*aspect, D, -D, 1, 1000);
+        //照相机配置
+        var fov = 40;//拍摄距离
+        var near = 1;//最小范围
+        var far = 1000;//最大范围
+         camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, near, far)
+
+        //camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight,0.1,200)
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+        document.body.appendChild(container);
+        /*
+         var spotLight = new THREE.SpotLight( 0xffffff );
+         spotLight.position.set( 100, 1000, 100 );
+
+         spotLight.castShadow = true;
+
+         spotLight.shadow.mapSize.width = 1024;
+         spotLight.shadow.mapSize.height = 1024;
+
+         spotLight.shadow.camera.near = 500;
+         spotLight.shadow.camera.far = 4000;
+         spotLight.shadow.camera.fov = 30;
+
+         scene.add( spotLight );
+         */
+        var light = new THREE.AmbientLight( 0xffffff);
+        light.position.set( 100, 20, 15 );
+        scene.add( light );
+
+        camera.position.set(5,-5,5);
+        camera.lookAt(new THREE.Vector3(0,0,0));
+        camera.rotation.z = 5/6*Math.PI;
+
+        var loader = new THREE.ColladaLoader();
+        loader.load("../static/js/three/models/wuzi.dae", function( collada ){
+                rouletteScene = collada.scene;
+//                rouletteScene.scale.set(1,1,1);
+//                rouletteScene.position.set(5,5,5);
+                scene.add(rouletteScene);
+            },
+            function( xhr) {
+                console.log((xhr.loaded/xhr.total * 100)+"% loaded");
+            });
+
+
+        stats = new Stats();
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.top = '0px';
+        container.appendChild(stats.domElement);
+
+
+        controls = new THREE.TrackballControls( camera );
+
+        controls.rotateSpeed = 5.0;
+        controls.zoomSpeed = 5;
+        controls.panSpeed = 2;
+
+        controls.noZoom = false;
+        controls.noPan = false;
+
+        controls.staticMoving = false;
+        controls.dynamicDampingFactor = 0.3;
+        window.addEventListener( 'resize', onWindowResize, false );
+
+        render();
+    }
+    function onWindowResize() {
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        controls.handleResize();
+
+    }
+
+
+    function render(){
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
+//        if( rouletteScene ){
+//            rouletteScene.rotation.z++;
+//        }
+
+        controls.update();
+
+        stats.update();
+    }
+</script>
+
+</body>
+</html>

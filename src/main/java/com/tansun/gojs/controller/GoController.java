@@ -33,6 +33,22 @@ public class GoController {
     }
 
 
+    @RequestMapping("/treeDemo")
+    public ModelAndView gotoTreeDemo() throws Exception {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forward:/static/html/treeDemo.html");
+        return modelAndView;
+    }
+    @RequestMapping("/threeDemo2")
+    public ModelAndView gotothreeDemo2() throws Exception {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forward:/static/html/threeDemo2.html");
+        return modelAndView;
+    }
+
+
     /**
      * 获取节点之间线的关系
      *

@@ -30,7 +30,7 @@ public class GoNodeData implements Serializable {
 
     private String os;//linux，unix，mac，Windows
 
-    private String type;//类型：1 中心节点； 2 子节点,等等
+    private String type;//类型：1 交换机； 2 防火钱；3 服务器
 
     private String mark; //备注
 

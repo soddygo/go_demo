@@ -1,39 +1,85 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>demo</title>
     <base>
-    <!--<link rel="stylesheet" type="text/css" href="css/style-index.css"/>-->
-    <script type="text/javascript" src="../static/js/base/jquery-1.11.1.min.js"></script>
-    <!--<script type="text/javascript" src="../static/js/base/jquery-3.1.1.min.js"></script>-->
+    <link rel="stylesheet" type="text/css" href="../static/js/base/bootstrap-3.3.7-dist/css/bootstrap.css"/>
+
+    <!--<script type="text/javascript" src="../static/js/base/jquery-1.11.1.min.js"></script>-->
+    <script type="text/javascript" src="../static/js/base/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="../static/js/base/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
     <script type="text/javascript" src="../static/js/base/angular.min.js"></script>
     <script type="text/javascript" src="../static/js/base/go-debug.js"></script>
 
     <script type="text/javascript" src="../static/js/goDemo/demo.js"></script>
 
 
-
 </head>
 <body ng-app="gojsApp">
-<div ng-controller="gojsCtrl"  ng-cloak>
+<div ng-controller="gojsCtrl" ng-cloak>
 
     <div style="margin: 2px;">
+        <!--初始化-->
         <button type="button" class="btn btn-primary" ng-click="init()">初始化</button>
+        <!--布局改变-->
         <button type="button" class="btn btn-primary" ng-disabled="true">布局改变</button>
         <select ng-model="layout" ng-change="changeLayout()">
-            <option value="ForceDirectedLayout" selected >ForceDirectedLayout</option>
+            <option value="ForceDirectedLayout" selected>ForceDirectedLayout</option>
             <option value="LayeredDigraphLayout">LayeredDigraphLayout</option>
-            <option value="TreeLayout" >TreeLayout</option>
+            <option value="TreeLayout">TreeLayout</option>
             <option value="CircularLayout">CircularLayout</option>
             <option value="GridLayout">GridLayout</option>
         </select>
+        <!--颜色改变-->
+        <!--<select  ng-model="nodeColor" ng-change="changeNodeColor()">-->
+        <!--<option value="blue" selected >blue</option>-->
+        <!--<option value="yellow">yellow</option>-->
+        <!--<option value="green" >green</option>-->
+        <!--<option value="CircularLayout">CircularLayout</option>-->
+        <!--<option value="GridLayout">GridLayout</option>-->
+        <!--</select>-->
     </div>
 
 
-
+    <!--拓扑图-->
     <div id="sample">
-        <div id="myDiagramDiv" style="background-color: whitesmoke; border: solid 1px black; width: 100%; height: 700px"></div>
+        <div id="myDiagramDiv"
+             style="background-color: whitesmoke; border: solid 1px black; width: 100%; height: 700px;
+             background-color:#dff3fa"></div>
+
+    </div>
+    <!--节点信息展示-->
+    <div ng-show="nodeDataShow">
+        <div>
+            <p>节点信息展示:{{menuText}}</p>
+        </div>
+        <table ng-model="nodeData" class="table table-hover" style="background-color: #2aabd2">
+            <tr>
+                <td>key</td>
+                <td>{{nodeData.key }}</td>
+            </tr>
+            <tr>
+                <td>text</td>
+                <td>{{nodeData.text }}</td>
+            </tr>
+            <tr>
+                <td>name</td>
+                <td>{{nodeData.name }}</td>
+            </tr>
+            <tr>
+                <td>ip</td>
+                <td>{{nodeData.ip }}</td>
+            </tr>
+            <tr>
+                <td>os</td>
+                <td>{{nodeData.os }}</td>
+            </tr>
+            <tr>
+                <td>mark</td>
+                <td>{{nodeData.mark }}</td>
+            </tr>
+        </table>
 
     </div>
 

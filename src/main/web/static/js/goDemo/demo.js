@@ -55,6 +55,14 @@ function gojsCtrl($compile, $scope, $http, $q) {
     var $ = null;//gojs 全局对象
     var myDiagram = null;//图形对象
     $scope.layout = "TreeLayout";
+    $scope.nodeColor = "blue";
+
+    $scope.nodeData = null;//点击的节点数据对象
+    $scope.nodeDataShow = false;//点击的节点数据对象
+    $scope.menuText = null;//菜单点击提示信息演示
+
+
+    var nodeBlackGorundBrush = null;//节点背景颜色笔刷
 
 
     $scope.init = function () {
@@ -91,9 +99,116 @@ function gojsCtrl($compile, $scope, $http, $q) {
     }
 
     /**
+     * 获取节点信息
+     */
+    $scope.getNodeDatas = function () {
+        var deferred = $q.defer();
+        var dataPromise = deferred.promise;
+
+        var childNodeList = new Array();
+        $http({
+            url: "getNodeDatas",
+            method: "POST",
+            data: {}
+        }).then(function (resp) {
+            var data = resp.data;
+            for (var i in data) {
+                var childNode = new Object();
+                childNode.key = data[i].nodeKey;
+                childNode.text = data[i].text;
+                childNode.name = data[i].name;
+                childNode.type = data[i].type;
+                childNode.ip = data[i].ip;
+                childNode.os = data[i].os;
+                childNode.mark = data[i].mark;
+                childNodeList.push(childNode)
+            }
+            deferred.resolve(childNodeList);
+
+        });
+        return dataPromise;
+    }
+
+    /**
+     * 获取线信息
+     */
+    $scope.getLinkDatas = function () {
+        var deferred = $q.defer();
+        var dataPromise = deferred.promise;
+
+        var childNodeList = new Array();
+        $http({
+            url: "getLinkDatas",
+            method: "POST",
+            data: {}
+        }).then(function (resp) {
+            var data = resp.data;
+            for (var i in data) {
+                var childNode = new Object();
+                childNode.from = data[i].fromId;
+                childNode.to = data[i].toId;
+                childNode.text = data[i].text;
+                childNode.color = data[i].color;
+                childNodeList.push(childNode)
+            }
+            deferred.resolve(childNodeList);
+
+        });
+        return dataPromise;
+    }
+
+
+    /**
+     * 更改节点背景色
+     * @param color
+     */
+    $scope.changeNodeColor = function () {
+        myDiagram.startTransaction("change NodeColor");
+        // switch ($scope.layout) {
+        //     case "lightgreen":
+        //         layout = $(go.ForceDirectedLayout);
+        //         break;
+        //     case "yellow":
+        //         layout = $(go.LayeredDigraphLayout);
+        //         break;
+        //     case "blue":
+        //         layout = $(go.TreeLayout);
+        //         break;
+        // }
+        // var brush =  $(go.Brush, "Linear", {0: "blue", 1: "rgb(254, 162, 0)"});
+        // myDiagram.nodeTemplate.node.shape.fill = brush;
+        // nodeBlackGorundBrush.darken("blue");
+        myDiagram.commitTransaction("change NodeColor");
+    }
+
+    /**
+     * 展示节点信息
+     * @param node
+     */
+    $scope.showNodeInfo = function (node) {
+
+        $scope.nodeData = new Object();
+        $scope.nodeData['key'] = node.key;
+        $scope.nodeData.text = node.text;
+        $scope.nodeData.name = node.name;
+        $scope.nodeData.type = node.type;
+        $scope.nodeData.ip = node.ip;
+        $scope.nodeData.os = node.os;
+        $scope.nodeData.mark = node.mark;
+
+        $scope.nodeDataShow = true;//显示节点信息
+
+    }
+
+
+    /**
      * 图形初始化
      */
     $scope.firstInit = function () {
+
+        // nodeBlackGorundBrush = $(go.Brush, "Linear", {0: "lightgreen", 1: "rgb(254, 162, 0)"});//节点背景颜色笔刷
+
+
         myDiagram =
             $(go.Diagram, "myDiagramDiv",  // must name or refer to the DIV HTML element
                 {
@@ -102,18 +217,42 @@ function gojsCtrl($compile, $scope, $http, $q) {
                     layout: $(go.ForceDirectedLayout,  // automatically spread nodes apart
                         {defaultSpringLength: 30, defaultElectricalCharge: 100}),
                     "undoManager.isEnabled": true
+
                 });
 
         // define each Node's appearance
         myDiagram.nodeTemplate =
             $(go.Node, "Auto",  // the whole node panel
-                {locationSpot: go.Spot.Center},
+                {
+                    locationSpot: go.Spot.Center,
+                    click: function (e, obj) {
+                        //点击事件
+                        var node = obj.part;  // get the Node containing this Button
+                        var nodeData = node.data;
+
+                        $scope.showNodeInfo(nodeData);
+                        $scope.$apply();//需要手动刷新
+
+                    }
+                },
                 // define the node's outer shape, which will surround the TextBlock
                 $(go.Shape, "Rectangle",
-                    {fill: $(go.Brush, "Linear", {0: "rgb(254, 201, 0)", 1: "rgb(254, 162, 0)"}), stroke: "black"}),
-                $(go.TextBlock,
-                    {font: "bold 10pt helvetica, bold arial, sans-serif", margin: new go.Margin(4, 4, 3, 20)},
-                    new go.Binding("text", "text"))
+                    // {fill: $(go.Brush, "Linear", {0: "lightgreen", 1: "rgb(254, 162, 0)"}), stroke: "black"}
+                    {fill: $(go.Brush, "Linear", {}), stroke: null}
+                    ),
+                $(go.Panel, "Vertical",
+                    $(go.Picture, {name: 'Picture', desiredSize: new go.Size(40, 48), margin: 1},
+                        new go.Binding("source", "type", pictureHandle)),
+                    $(go.TextBlock,
+                        {font: "bold 10pt helvetica, bold arial, sans-serif", margin: new go.Margin(4, 4, 3, 20)},
+                        new go.Binding("text", "name")),
+                    $(go.TextBlock,
+                        {font: "bold 10pt helvetica, bold arial, sans-serif", margin: new go.Margin(4, 4, 3, 20)},
+                        new go.Binding("text", "ip")),
+                    $(go.TextBlock,
+                        {font: "bold 10pt helvetica, bold arial, sans-serif", margin: new go.Margin(4, 4, 3, 20)},
+                        new go.Binding("text", "os"))
+                )
             );
 
         // replace the default Link template in the linkTemplateMap
@@ -121,9 +260,9 @@ function gojsCtrl($compile, $scope, $http, $q) {
             $(go.Link,  // the whole link panel
                 //{ routing: go.Link.AvoidsNodes },
                 $(go.Shape,  // the link shape
-                    {stroke: "black"}),
+                    {strokeWidth: 3, stroke: "black"}),
                 $(go.Shape,  // the arrowhead
-                    {toArrow: "standard", stroke: null}),
+                    {toArrow: "standard", stroke: "#555"}),
                 $(go.Panel, "Auto",
                     $(go.Shape,  // the label background, which becomes transparent around the edges
                         {
@@ -145,6 +284,24 @@ function gojsCtrl($compile, $scope, $http, $q) {
                 )
             );
 
+        //右键菜单
+        myDiagram.nodeTemplate.contextMenu =
+            $(go.Adornment, "Vertical",
+                $("ContextMenuButton", $(go.TextBlock, "菜单1"), {
+                    click: function (e, obj) {
+                        $scope.menuText = "你点击了右键菜单1";
+                        $scope.$apply();
+                    }
+                }),
+                $("ContextMenuButton", $(go.TextBlock, "菜单2"), {
+                    click: function (e, obj) {
+                        $scope.menuText = "你点击了右键菜单2";
+                        $scope.$apply();
+
+                    }
+                })
+            );
+
         myDiagram.nodeTemplateMap.add("token",
             $(go.Part,
                 {locationSpot: go.Spot.Center, layerName: "Foreground"},
@@ -153,60 +310,24 @@ function gojsCtrl($compile, $scope, $http, $q) {
                     new go.Binding("fill", "color"))
             ));
 
+        var nodePromise = $scope.getNodeDatas();
+        var linkPromise = $scope.getLinkDatas();
+
         // create the model for the concept map
-        var nodeDataArray = [
-            {key: 1, text: "Concept Maps"},
-            {key: 2, text: "Organized Knowledge"},
-            {key: 3, text: "Context Dependent"},
-            {key: 4, text: "Concepts"},
-            {key: 5, text: "Propositions"},
-            {key: 6, text: "Associated Feelings or Affect"},
-            {key: 7, text: "Perceived Regularities"},
-            {key: 8, text: "Labeled"},
-            {key: 9, text: "Hierarchically Structured"},
-            {key: 10, text: "Effective Teaching"},
-            {key: 11, text: "Crosslinks"},
-            {key: 12, text: "Effective Learning"},
-            {key: 13, text: "Events (Happenings)"},
-            {key: 14, text: "Objects (Things)"},
-            {key: 15, text: "Symbols"},
-            {key: 16, text: "Words"},
-            {key: 17, text: "Creativity"},
-            {key: 18, text: "Interrelationships"},
-            {key: 19, text: "Infants"},
-            {key: 20, text: "Different Map Segments"}
-        ];
-        var linkDataArray = [
-            {from: 1, to: 2, text: "represent"},
-            {from: 2, to: 3, text: "is"},
-            {from: 2, to: 4, text: "is"},
-            {from: 2, to: 5, text: "is"},
-            {from: 2, to: 6, text: "includes"},
-            {from: 2, to: 10, text: "necessary\nfor"},
-            {from: 2, to: 12, text: "necessary\nfor"},
-            {from: 4, to: 5, text: "combine\nto form"},
-            {from: 4, to: 6, text: "include"},
-            {from: 4, to: 7, text: "are"},
-            {from: 4, to: 8, text: "are"},
-            {from: 4, to: 9, text: "are"},
-            {from: 5, to: 9, text: "are"},
-            {from: 5, to: 11, text: "may be"},
-            {from: 7, to: 13, text: "in"},
-            {from: 7, to: 14, text: "in"},
-            {from: 7, to: 19, text: "begin\nwith"},
-            {from: 8, to: 15, text: "with"},
-            {from: 8, to: 16, text: "with"},
-            {from: 9, to: 17, text: "aids"},
-            {from: 11, to: 18, text: "show"},
-            {from: 12, to: 19, text: "begins\nwith"},
-            {from: 17, to: 18, text: "needed\nto see"},
-            {from: 18, to: 20, text: "between"}
-        ];
-        myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+        var nodeDataArray = null;
+        var linkDataArray = null;
+        $q.all([nodePromise, linkPromise]).then(function (result) {
+            nodeDataArray = result[0];
+            linkDataArray = result[1];
 
-        initTokens();
+            //wait data
+            myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+            initTokens();
+
+        });
+
+
     }
-
 
 
     function initTokens() {
@@ -288,6 +409,28 @@ function gojsCtrl($compile, $scope, $http, $q) {
         data.category === "token" || data === node.data) {
         }
         return data.key;
+    }
+
+    /**
+     * 节点图片处理
+     * @returns {string}
+     */
+    function pictureHandle(type) {
+
+        var src = "../static/img/icon_test.png";
+
+        switch (type){
+            case "1":
+                src = "../static/img/route.gif"
+                break;
+            case "2" :
+                src = "../static/img/firewall.jpg"
+                break;
+            case "3":
+                src = "../static/img/pc.jpg"
+                break;
+        }
+        return src;
     }
 
 }

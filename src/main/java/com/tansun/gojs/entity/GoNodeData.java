@@ -3,6 +3,7 @@ package com.tansun.gojs.entity;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
@@ -34,6 +35,11 @@ public class GoNodeData implements Serializable {
 
     private String mark; //备注
 
+    @Transient
+    private Double[] latlong;//经纬度数组
+
+    private Double longitude;//经度
+    private Double latitude;//纬度
 
     public Integer getId() {
         return id;
@@ -41,6 +47,14 @@ public class GoNodeData implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getNodeKey() {
+        return nodeKey;
+    }
+
+    public void setNodeKey(Integer nodeKey) {
+        this.nodeKey = nodeKey;
     }
 
     public String getText() {
@@ -91,11 +105,36 @@ public class GoNodeData implements Serializable {
         this.mark = mark;
     }
 
-    public Integer getNodeKey() {
-        return nodeKey;
+    //自动组合为经纬度的数组
+    public Double[] getLatlong() {
+        if(latlong == null || latlong.length == 0){
+            Double[] lat = new Double[2];
+            lat[1]= this.longitude;
+            lat[0] = this.latitude;
+            return lat;
+        }else {
+            return latlong;
+        }
+
     }
 
-    public void setNodeKey(Integer nodeKey) {
-        this.nodeKey = nodeKey;
+    public void setLatlong(Double[] latlong) {
+        this.latlong = latlong;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 }

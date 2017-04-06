@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="go_demo:war exploded">
-    <output-path>$PROJECT_DIR$/out/artifacts/go_demo_war_exploded</output-path>
+    <output-path>$PROJECT_DIR$/target/go_demo-1.0-SNAPSHOT</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -55,6 +55,7 @@
           <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.2.3" />
           <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
           <element id="library" level="project" name="Maven: com.oracle:ojdbc6:12.1.0.1-atlassian-hosted" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.32" />
           <element id="library" level="project" name="Maven: com.alibaba.druid:druid-wrapper:0.2.9" />
           <element id="library" level="project" name="Maven: com.alibaba:druid:0.2.9" />
           <element id="library" level="project" name="Maven: net.bull.javamelody:javamelody-core:1.56.0" />
@@ -72,9 +73,14 @@
           <element id="library" level="project" name="Maven: com.alibaba:fastjson:1.2.16" />
           <element id="library" level="project" name="Maven: net.sourceforge.jexcelapi:jxl:2.6.12" />
           <element id="library" level="project" name="Maven: org.freemarker:freemarker:2.3.23" />
-          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:6.0.5" />
-          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.32" />
+          <element id="library" level="project" name="Maven: com.alibaba.rocketmq:rocketmq-client:3.2.6" />
+          <element id="library" level="project" name="Maven: com.alibaba.rocketmq:rocketmq-common:3.2.6" />
+          <element id="library" level="project" name="Maven: com.alibaba.rocketmq:rocketmq-remoting:3.2.6" />
+          <element id="library" level="project" name="Maven: io.netty:netty-all:4.0.25.Final" />
         </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/target/go_demo-1.0-SNAPSHOT/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="go_demo/web/Web" />
     </root>

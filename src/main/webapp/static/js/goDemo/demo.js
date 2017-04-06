@@ -223,10 +223,18 @@ function gojsCtrl($compile, $scope, $http, $q) {
         //     id: "mapbox.streets",
         //     accessToken: "pk.eyJ1IjoiZ29qcyIsImEiOiJjaXppcnNkbDgwMzQ3MnFsNDFnY2phb2QwIn0.7AuVKrWdxQnJxa_W7qC3-w"
         // }).addTo(myLeafletMap);
-        L.tileLayer("http://localhost:8080/godemo/gis/getGis/{type}/{z}/{x}/{y}.png", {
+
+        // L.tileLayer("http://localhost:8080/godemo/gis/getGis/{type}/{z}/{x}/{y}.png", {
+        //     maxZoom: 10,
+        //     minZoom: 1,
+        //     type: 788865972
+        // }).addTo(myLeafletMap);
+
+        L.tileLayer("https://api.mapbox.com/styles/v1/soddygo/cj0vs0lkq00pg2rqp5e78sbsj/tiles/256/{z}/{x}/{y}?access_token={accessToken}", {
             maxZoom: 10,
             minZoom: 1,
-            type: 788865972
+            type: 788865972,
+            accessToken:"pk.eyJ1Ijoic29kZHlnbyIsImEiOiJjajBxdDE3MjEwMXVhMzNtd3J0em11YjJsIn0.HQ3Mu5SpqaOmr8awN4163w"
         }).addTo(myLeafletMap);
 
         //增加一个圆形标点，测试用

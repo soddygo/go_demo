@@ -14,6 +14,7 @@ import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.HibernateTemplate;
@@ -284,8 +285,7 @@ public class BaseDaoImpl implements BaseDao {
 
 	@Override
 	public <T> List<T> queryForList(String sql, Class<T> clazz, Object... paras) {
-
-		return this.jdbcTemplate.queryForList(sql, clazz, paras);
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<T>(clazz), paras);
 	}
 
 	@Override

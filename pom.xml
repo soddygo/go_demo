@@ -8,12 +8,14 @@
     <artifactId>go_demo</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-
+    <packaging>war</packaging>
 
 
     <properties>
         <spring.version>4.3.2.RELEASE</spring.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
+        <!--rocketMq-->
+        <rocketMq.version>3.5.7</rocketMq.version>
     </properties>
 
 
@@ -284,6 +286,65 @@
         </dependency>
 
 
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.apache.activemq/activemq-spring &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.activemq</groupId>-->
+            <!--<artifactId>activemq-spring</artifactId>-->
+            <!--<version>5.14.4</version>-->
+        <!--</dependency>-->
+
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework/spring-jms &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-jms</artifactId>-->
+            <!--<version>4.3.7.RELEASE</version>-->
+        <!--</dependency>-->
+
+
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.apache.activemq/activemq-core &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.activemq</groupId>-->
+            <!--<artifactId>activemq-core</artifactId>-->
+            <!--<version>5.7.0</version>-->
+        <!--</dependency>-->
+
+
+        <!-- https://mvnrepository.com/artifact/com.alibaba.rocketmq/rocketmq-common -->
+        <!--<dependency>-->
+            <!--<groupId>com.alibaba.rocketmq</groupId>-->
+            <!--<artifactId>rocketmq-common</artifactId>-->
+            <!--<version>${rocketMq.version}</version>-->
+        <!--</dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/com.alibaba.rocketmq/rocketmq-remoting -->
+        <!--<dependency>-->
+            <!--<groupId>com.alibaba.rocketmq</groupId>-->
+            <!--<artifactId>rocketmq-remoting</artifactId>-->
+            <!--<version>${rocketMq.version}</version>-->
+        <!--</dependency>-->
+
+        <!--rocketMq-->
+        <!--<dependency>-->
+            <!--<groupId>com.alibaba.rocketmq</groupId>-->
+            <!--<artifactId>rocketmq-client</artifactId>-->
+            <!--<version>${rocketMq.version}</version>-->
+        <!--</dependency>-->
+
+        <!-- RocketMQ -->
+        <dependency>
+            <groupId>com.alibaba.rocketmq</groupId>
+            <artifactId>rocketmq-all</artifactId>
+            <version>3.2.6</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>3.2.6</version>
+        </dependency>
+
+
+
 
     </dependencies>
 
@@ -291,12 +352,22 @@
     <build>
         <plugins>
             <!-- 保证使用jdk1.7编译 -->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
             <!--<plugin>-->
-                <!--<artifactId>maven-compiler-plugin</artifactId>-->
-                <!--<version>2.3.2</version>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-war-plugin</artifactId>-->
+                <!--<version>2.1.1</version>-->
                 <!--<configuration>-->
-                    <!--<source>1.7</source>-->
-                    <!--<target>1.7</target>-->
+
+                    <!--<webXml>src/main/web\WEB-INF\web.xml</webXml>-->
+
                 <!--</configuration>-->
             <!--</plugin>-->
             <!--&lt;!&ndash; skip tests when maven install &ndash;&gt;-->
@@ -328,14 +399,7 @@
             <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version> <executions> <execution> <id>attach-javadoc</id>
                 <goals> <goal>jar</goal> </goals> </execution> </executions> </plugin> -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
+
         </plugins>
     </build>
 </project>

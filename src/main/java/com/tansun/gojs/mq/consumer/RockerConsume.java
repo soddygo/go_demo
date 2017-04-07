@@ -57,7 +57,7 @@ public class RockerConsume {
                             + " Receive New Messages: " + msgs);
 
                     MessageExt msg = msgs.get(0);
-                    String message = msg.getBody().toString();
+                    String message = new String(msg.getBody());
                     System.out.printf("message:%s\r\n", message);
 
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

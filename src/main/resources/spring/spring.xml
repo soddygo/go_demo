@@ -40,7 +40,7 @@
 
 	<import resource="classpath:spring/spring-datasource.xml" />
 	<import resource="classpath:spring/spring-service.xml" />
-	<!--<import resource="classpath:spring/spring-quartz.xml" />-->
+	<import resource="classpath:spring/spring-quartz.xml" />
 	<import resource="classpath:spring/spring-thread.xml" />
 	<!--<import resource="classpath:spring/spring-freemarker.xml" />-->
 	<!--<import resource="classpath:spring/spring-cloud.xml" />-->

@@ -2,139 +2,36 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
 
-	<!--&lt;!&ndash; 定时任务启动配置 &ndash;&gt;-->
-	<!--<bean id="startQuertz" lazy-init="true" autowire="no"-->
-		<!--class="org.springframework.scheduling.quartz.SchedulerFactoryBean">-->
-		<!--<property name="triggers">-->
-			<!--<list>-->
-				<!--<ref bean="doDailyCountTask" />-->
-				<!--<ref bean="doTodayCountTask" />-->
-				<!--<ref bean="doWeekWordTask" />-->
-		<!---->
-				<!--&lt;!&ndash; 实体抽取任务 &ndash;&gt;-->
-				<!--&lt;!&ndash; -->
-				<!--<ref bean="doploTextTask" />-->
-				 <!--&ndash;&gt;-->
-				<!--&lt;!&ndash; 关键词分析 &ndash;&gt;-->
-				<!--&lt;!&ndash; -->
-				<!--<ref bean="dokeywordTextTask" />-->
-				 <!--&ndash;&gt;-->
-			<!--</list>-->
-		<!--</property>-->
-	<!--</bean>-->
+    <!--&lt;!&ndash; 定时任务启动配置 &ndash;&gt;-->
+    <bean id="startQuertz" lazy-init="true" autowire="no"
+          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="doNagiosProduceTask"/>
+            </list>
+        </property>
+    </bean>
 
 
-	<!--&lt;!&ndash; 统计分析定时任务开始 &ndash;&gt;-->
-
-	<!--&lt;!&ndash; 统计分析定时任务 &ndash;&gt;-->
-	<!--<bean id="countTask" class="com.trs.unify.config.CountQuartz"></bean>-->
-
-	<!--&lt;!&ndash; 统计分析每日统计 &ndash;&gt;-->
-	<!--<bean id="jobDailyCountTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
-		<!--<property name="targetObject">-->
-			<!--<ref bean="countTask" />-->
-		<!--</property>-->
-		<!--<property name="targetMethod">-->
-			<!--<value>dailyCountTask</value>-->
-		<!--</property>-->
-		<!--<property name="concurrent" value="false"></property>-->
-	<!--</bean>-->
-	<!--<bean id="doDailyCountTask" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
-		<!--<property name="jobDetail">-->
-			<!--<ref bean="jobDailyCountTask" />-->
-		<!--</property>-->
-		<!--<property name="cronExpression">-->
-			<!--&lt;!&ndash; 每天23点55分执行一次 &ndash;&gt;-->
-			<!--<value>0 55 23 * * ?</value>-->
-		<!--</property>-->
-	<!--</bean>-->
-
-	<!--&lt;!&ndash; 统计分析今日统计 &ndash;&gt;-->
-	<!--<bean id="jobTodayCountTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
-		<!--<property name="targetObject">-->
-			<!--<ref bean="countTask" />-->
-		<!--</property>-->
-		<!--<property name="targetMethod">-->
-			<!--<value>todayCountTask</value>-->
-		<!--</property>-->
-		<!--<property name="concurrent" value="false"></property>-->
-	<!--</bean>-->
-	<!--<bean id="doTodayCountTask" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
-		<!--<property name="jobDetail">-->
-			<!--<ref bean="jobTodayCountTask" />-->
-		<!--</property>-->
-		<!--<property name="cronExpression">-->
-			<!--&lt;!&ndash; 每15分钟执行一次 &ndash;&gt;-->
-			<!--<value>0 */15 * * * ?</value>-->
-		<!--</property>-->
-	<!--</bean>-->
-
-	<!--&lt;!&ndash; 统计分析定时任务结束 &ndash;&gt;-->
-
-	<!--&lt;!&ndash; 聚类分析定时任务 &ndash;&gt;-->
-
-
-	<!--&lt;!&ndash;&lt;!&ndash; 实体抽取任务 &ndash;&gt;&ndash;&gt;-->
-	<!--&lt;!&ndash;<bean id="ploTextTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">&ndash;&gt;-->
-		<!--&lt;!&ndash;<property name="targetObject">&ndash;&gt;-->
-			<!--&lt;!&ndash;<ref bean="ploJob" />&ndash;&gt;-->
-		<!--&lt;!&ndash;</property>&ndash;&gt;-->
-		<!--&lt;!&ndash;<property name="targetMethod">&ndash;&gt;-->
-			<!--&lt;!&ndash;<value>excute</value>&ndash;&gt;-->
-		<!--&lt;!&ndash;</property>&ndash;&gt;-->
-		<!--&lt;!&ndash;<property name="concurrent" value="false"></property>&ndash;&gt;-->
-	<!--&lt;!&ndash;</bean>&ndash;&gt;-->
-	<!--&lt;!&ndash;<bean id="doploTextTask" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">&ndash;&gt;-->
-		<!--&lt;!&ndash;<property name="jobDetail">&ndash;&gt;-->
-			<!--&lt;!&ndash;<ref bean="ploTextTask" />&ndash;&gt;-->
-		<!--&lt;!&ndash;</property>&ndash;&gt;-->
-		<!--&lt;!&ndash;<property name="cronExpression">&ndash;&gt;-->
-			<!--&lt;!&ndash;&lt;!&ndash; 每15分钟执行一次 &ndash;&gt;&ndash;&gt;-->
-			<!--&lt;!&ndash;<value>0 */30 * * * ?</value>&ndash;&gt;-->
-		<!--&lt;!&ndash;</property>&ndash;&gt;-->
-	<!--&lt;!&ndash;</bean>&ndash;&gt;-->
-	<!--&lt;!&ndash;&ndash;&gt;-->
-	<!--&lt;!&ndash;&lt;!&ndash; 关键词任务 &ndash;&gt;&ndash;&gt;-->
-	<!--&lt;!&ndash;<bean id="keywordTextTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">&ndash;&gt;-->
-		<!--&lt;!&ndash;<property name="targetObject">&ndash;&gt;-->
-			<!--&lt;!&ndash;<ref bean="keywordJob" />&ndash;&gt;-->
-		<!--&lt;!&ndash;</property>&ndash;&gt;-->
-		<!--&lt;!&ndash;<property name="targetMethod">&ndash;&gt;-->
-			<!--&lt;!&ndash;<value>excute</value>&ndash;&gt;-->
-		<!--&lt;!&ndash;</property>&ndash;&gt;-->
-		<!--&lt;!&ndash;<property name="concurrent" value="false"></property>&ndash;&gt;-->
-	<!--&lt;!&ndash;</bean>&ndash;&gt;-->
-	<!--&lt;!&ndash;<bean id="dokeywordTextTask" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">&ndash;&gt;-->
-		<!--&lt;!&ndash;<property name="jobDetail">&ndash;&gt;-->
-			<!--&lt;!&ndash;<ref bean="keywordTextTask" />&ndash;&gt;-->
-		<!--&lt;!&ndash;</property>&ndash;&gt;-->
-		<!--&lt;!&ndash;<property name="cronExpression">&ndash;&gt;-->
-			<!--&lt;!&ndash;&lt;!&ndash; 每15分钟执行一次 &ndash;&gt;&ndash;&gt;-->
-			<!--&lt;!&ndash;<value>0 */30 * * * ?</value>&ndash;&gt;-->
-		<!--&lt;!&ndash;</property>&ndash;&gt;-->
-	<!--&lt;!&ndash;</bean>&ndash;&gt;-->
-
-	<!--&lt;!&ndash; 聚类分析任务结束 &ndash;&gt;-->
-
-	<!--&lt;!&ndash;周报生成任务&ndash;&gt;-->
-    <!--<bean id="weekWordTask" class="com.trs.report.task.CycleReportTask"></bean>-->
-    <!--<bean id="jobWeekWordTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
-        <!--<property name="targetObject">-->
-            <!--<ref bean="weekWordTask" />-->
-        <!--</property>-->
-        <!--<property name="targetMethod">-->
-            <!--<value>WeekWord</value>-->
-        <!--</property>-->
-        <!--<property name="concurrent" value="false"></property>-->
-    <!--</bean>-->
-    <!--<bean id="doWeekWordTask" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
-        <!--<property name="jobDetail">-->
-            <!--<ref bean="jobWeekWordTask" />-->
-        <!--</property>-->
-        <!--<property name="cronExpression">-->
-            <!--&lt;!&ndash; 每周六，0点执行一次&ndash;&gt;-->
-            <!--<value>0 0 0 ? * 6</value>-->
-        <!--</property>-->
-    <!--</bean>-->
+    <!--nagios推送消息生成任务-->
+    <bean id="nagiosProduceTask" class="com.tansun.gojs.task.NagiosTask"></bean>
+    <bean id="jobWeekWordTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="nagiosTask"/>
+        </property>
+        <property name="targetMethod">
+            <value>produceTask</value>
+        </property>
+        <property name="concurrent" value="false"></property>
+    </bean>
+    <bean id="doNagiosProduceTask" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="jobWeekWordTask"/>
+        </property>
+        <property name="cronExpression">
+            <!-- 没1分钟执行一次-->
+            <value>0 */1 * * * ?</value>
+        </property>
+    </bean>
 
 </beans>

@@ -30,15 +30,20 @@ public class RockerConsume {
 
     private Logger logger = LoggerFactory.getLogger(RockerProducer.class);
 
+    private String ip = "127.0.0.1";
+    private String port = "9876";
+    private String topic = "topic1";
+    private String tag = "test";
+
     DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("ConsumerGroupName");
 
 
     @PostConstruct
     public void init() {
-        consumer.setNamesrvAddr("127.0.0.1:9876");
+        consumer.setNamesrvAddr(ip + ":" + port);
         try {
 //            consumer.subscribe("TopicTest1", "TagA || TagC || TagD");
-            consumer.subscribe("topic1", "*");
+            consumer.subscribe(this.topic, "*");
             consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
             consumer.registerMessageListener(new MessageListenerConcurrently() {
 
@@ -69,9 +74,9 @@ public class RockerConsume {
     }
 
     @PreDestroy
-    public void destory() {
+    public void destroy() {
         consumer.shutdown();
-        System.out.printf("consumer destory");
+        System.out.printf("consumer destroy");
 
     }
 

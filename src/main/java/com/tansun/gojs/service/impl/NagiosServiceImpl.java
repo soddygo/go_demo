@@ -3,7 +3,10 @@ package com.tansun.gojs.service.impl;
 import com.tansun.gojs.dao.BaseDao;
 import com.tansun.gojs.entity.nagios.NotificationsEntity;
 import com.tansun.gojs.entity.nagios.NotificationsLogsEntity;
+import com.tansun.gojs.mq.producer.RockerProducer;
 import com.tansun.gojs.service.NagiosService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,9 +23,12 @@ public class NagiosServiceImpl implements NagiosService {
     @Resource(name = "baseDao")
     private BaseDao baseDao;
 
+    @Autowired
+    private RockerProducer rockerProducer;
+
     @Override
     public List<NotificationsEntity> getNotificationList() throws Exception {
-        final String sql ="  SELECT\n" +
+        final String sql = "  SELECT\n" +
                 "    # 告警表唯一ID\n" +
                 "    UUID()                ID,\n" +
                 "    # 底层上报的原始ID\n" +
@@ -131,16 +137,31 @@ public class NagiosServiceImpl implements NagiosService {
                 "      ON T3.SERVICE_OBJECT_ID = T6.OBJECT_ID\n" +
                 "\n";
 
-        System.out.printf("sql:%s",sql);
-        return this.baseDao.queryForList(sql,NotificationsEntity.class);
+        return this.baseDao.queryForList(sql, NotificationsEntity.class);
     }
 
     @Override
-    public List<NotificationsLogsEntity> doNoSendMessageList() throws Exception {
+    public List<NotificationsLogsEntity> getNoSendMessageList() throws Exception {
         List<NotificationsLogsEntity> result = this.baseDao.findAll(NotificationsLogsEntity.class);
-        if(result.size()>0){
-            this.baseDao.deleteAll(result);//读取后，删除数据库数据
-        }
         return result;
     }
+
+    @Override
+    public void doSendMessageList() throws Exception {
+        List<NotificationsLogsEntity> result = this.baseDao.findAll(NotificationsLogsEntity.class);
+        if (result.size() > 0) {
+            this.baseDao.deleteAll(result);//读取后，删除数据库数据
+        }
+        //push message
+        for (NotificationsLogsEntity notificationsEntity : result) {
+            final String title = notificationsEntity.getTitle();
+            final String summary = notificationsEntity.getSummary();
+
+            if (StringUtils.isNoneBlank(title)) {
+                this.rockerProducer.sendMessage(title, summary);
+            }
+        }
+    }
+
+
 }

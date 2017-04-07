@@ -24,13 +24,20 @@ import javax.annotation.PreDestroy;
 @Lazy(false)
 public class RockerProducer {
 
+
     private Logger logger = LoggerFactory.getLogger(RockerProducer.class);
+
+
+    private String ip = "127.0.0.1";
+    private String port = "9876";
+    private String topic = "topic1";
+    private String tag = "test";
 
     DefaultMQProducer producer = new DefaultMQProducer("ProducerGroupName");
 
     @PostConstruct
     public void init() {
-        producer.setNamesrvAddr("127.0.0.1:9876");
+        producer.setNamesrvAddr(ip + ":" + port);
         try {
             producer.start();
         } catch (MQClientException e) {
@@ -40,30 +47,23 @@ public class RockerProducer {
 
     }
 
-    public void sendMessage(String topic, String tag, String key, String message) {
-        Message msg = new Message(topic,// topic
-                tag,// tag
+    public void sendMessage(String key, String message)
+            throws InterruptedException, RemotingException, MQClientException, MQBrokerException {
+        Message msg = new Message(this.topic,// topic
+                this.tag,// tag
                 key,// key
                 (message).getBytes());// body
-        try {
-            SendResult sendResult = producer.send(msg);
-            System.out.printf("sendResult:%s\r\n", sendResult);
-        } catch (MQClientException e) {
-            e.printStackTrace();
-        } catch (RemotingException e) {
-            e.printStackTrace();
-        } catch (MQBrokerException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+        SendResult sendResult = producer.send(msg);
+        System.out.printf("sendResult:%s\r\n", sendResult);
+
 
     }
 
     @PreDestroy
-    public void destory(){
+    public void destroy() {
         producer.shutdown();
-        System.out.printf("producer destory");
+        System.out.printf("producer destroy");
     }
 
 }

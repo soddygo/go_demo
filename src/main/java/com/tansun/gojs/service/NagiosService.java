@@ -22,5 +22,11 @@ public interface NagiosService {
      * @return 消息对象
      * @throws Exception 异常
      */
-    List<NotificationsLogsEntity> doNoSendMessageList() throws Exception;
+    List<NotificationsLogsEntity> getNoSendMessageList() throws Exception;
+
+    /**
+     * 获取未读通知，并rocketmq发送消息
+     * @throws Exception
+     */
+    void doSendMessageList() throws Exception;
 }
